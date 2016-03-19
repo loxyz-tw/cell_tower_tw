@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- The HTML 4.01 Transitional DOCTYPE declaration-->
+<!-- above set at the top of the file will set     -->
+<!-- the browser's rendering engine into           -->
+<!-- "Quirks Mode". Replacing this declaration     -->
+<!-- with a "Standards Mode" doctype is supported, -->
+<!-- but may lead to some differences in layout.   -->
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>全台灣 基地台 分佈地圖</title>
+
+    <style>
+      body {
+        margin: 0;
+        padding: 10px 20px 20px;
+        font-family: Arial;
+        font-size: 16px;
+      }
+      #map-container {
+        padding: 6px;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #ccc #ccc #999 #ccc;
+        -webkit-box-shadow: rgba(64, 64, 64, 0.5) 0 2px 5px;
+        -moz-box-shadow: rgba(64, 64, 64, 0.5) 0 2px 5px;
+        box-shadow: rgba(64, 64, 64, 0.1) 0 2px 5px;
+        width: 550px;
+        margin: 0px auto;
+      }
+      #map {
+        width: 550px;
+        height: 550px;
+      }
+      #actions {
+        list-style: none;
+        padding: 0;
+      }
+      #inline-actions {
+        padding-top: 10px;
+      }
+      .item {
+        margin-left: 20px;
+      }
+    </style>
+
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
+    <script src="/src/data.json"></script>
+    <script>
+      var script = '<script type="text/javascript" src="/src/markerclusterer';
+      if (document.location.search.indexOf('compiled') !== -1) {
+        script += '_compiled';
+      }
+      script += '.js"><' + '/script>';
+      document.write(script);
+    </script>
+
+    <script>
+      
+
+      var markerClusterer = null;
+      var map = null;
+      var imageUrl = 'http://chart.apis.google.com/chart?cht=mm&chs=24x32&' +
+          'chco=FFFFFF,008CFF,000000&ext=.png';
+
+      function refreshMap() {
+        if (markerClusterer) {
+          markerClusterer.clearMarkers();
+        }
+
+        var markers = [];
+
+        var markerImage = new google.maps.MarkerImage(imageUrl,
+          new google.maps.Size(24, 32));
+
+
+        for (var i = 0; i < 84190; ++i) {
+
+          var latLng = new google.maps.LatLng(data.icons[i].latitude,
+              data.icons[i].longitude)
+          var marker = new google.maps.Marker({
+            position: latLng,
+            draggable: true,
+            icon: markerImage
+          });
+          markers.push(marker);
+        }
+
+        var zoom = parseInt(document.getElementById('zoom').value, 10);
+        var size = -1;
+        var style = -1;
+        zoom = zoom === -1 ? null : zoom;
+<!--
+        size = size === -1 ? null : size;
+        style = style === -1 ? null: style;
+-->
+        markerClusterer = new MarkerClusterer(map, markers, {
+          maxZoom: zoom,
+          gridSize: size,
+
+        });
+      }
+
+      function initialize() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 2,
+          center: new google.maps.LatLng(23.5, 121),
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+
+        var refresh = document.getElementById('refresh');
+        google.maps.event.addDomListener(refresh, 'click', refreshMap);
+
+        var clear = document.getElementById('clear');
+        google.maps.event.addDomListener(clear, 'click', clearClusters);
+
+        refreshMap();
+      }
+
+      function clearClusters(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        markerClusterer.clearMarkers();
+      }
+
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+	<h3 align="center">全台灣 基地台 分佈地圖</h3>
+    <div id="map-container">
+      <div id="map">
+</div>
+</div>
+<div id="inline-actions" align="center">
+      <span>Max zoom level:
+        <select id="zoom">
+          <option value="-1">Default</option>
+          
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+          <option value="14">14</option>
+        </select>
+      </span>
+<!--
+      <span class="item">Cluster size:
+        <select id="size">
+          <option value="-1">Default</option>
+          <option value="40">40</option>
+          <option value="50">50</option>
+          <option value="70">70</option>
+          <option value="80">80</option>
+        </select>
+      </span>
+      <span class="item">Cluster style:
+        <select id="style">
+          <option value="-1">Default</option>
+          <option value="0">People</option>
+          <option value="1">Conversation</option>
+          <option value="2">Heart</option>
+       </select>
+      </span>
+-->
+		
+		<input class="item" id="refresh" type="button" value="Refresh Map" />
+		<a href="https://www.blogger.com/blogger.g?blogID=6901479589394602788#" id="clear">Clear</a>
+		<p align="center">目前數量約84190，第一次載入較慢，需25秒左右，請耐心等待。</p>
+		<p align="center">So far there're 84190 points. It takes 25 sec to load for the first time, please be patient.</p>
+		
+       
+
+       
+
+    </div>
+</body>
+</html>
