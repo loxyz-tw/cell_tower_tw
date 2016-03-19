@@ -46,9 +46,9 @@
     </style>
 
     <script src="https://maps.googleapis.com/maps/api/js"></script>
-    <script src="/src/data.json"></script>
+    <script src="src/data.json"></script>
     <script>
-      var script = '<script type="text/javascript" src="/src/markerclusterer';
+      var script = '<script type="text/javascript" src="src/markerclusterer';
       if (document.location.search.indexOf('compiled') !== -1) {
         script += '_compiled';
       }
@@ -75,7 +75,7 @@
           new google.maps.Size(24, 32));
 
 
-        for (var i = 0; i < 84190; ++i) {
+        for (var i = 0; i < 8419; ++i) {
 
           var latLng = new google.maps.LatLng(data.icons[i].latitude,
               data.icons[i].longitude)
